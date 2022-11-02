@@ -1,0 +1,41 @@
+﻿@using Telephones.ViewModels
+@model RecordViewModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    Layout = "_LayoutStart";
+}
+
+<div>
+    <a asp-action="Index">Вернуться к списку</a>
+</div>
+<div>
+     <div class="table-header row">
+         <h4>Запись #@Html.DisplayFor(m => m.Id)</h4>
+     </div>
+    <div class="table-row row">
+          <div class="col col-3">Имя: </div>
+          <div class="col col-4">@Html.DisplayFor(model => model.FirstName)</div>
+    </div>
+    <div class="table-row row">
+          <div class="col col-3">Фамилия: </div>
+          <div class="col col-4">@Html.DisplayFor(model => model.LastName)</div>
+    </div>
+    <div class="table-row row">
+          <div class="col col-3">Отвество: </div>
+          <div class="col col-4">@Html.DisplayFor(model => model.FatherName)</div>
+    </div>
+    <div class="table-row row">
+          <div class="col col-3">Телефон: </div>
+          <div class="col col-4">@Html.DisplayFor(model => model.PhoneNumber)</div>
+    </div>
+    <div class="table-row row">
+          <div class="col col-3">Адрес: </div>
+          <div class="col col-4">@Html.DisplayFor(model => model.Address)</div>
+    </div>
+    <div class="table-row row">
+          <div class="col col-3">Описание: </div>
+          <div class="col col-4">@Html.DisplayFor(model => model.Discript)</div>
+    </div>
+</div>
+

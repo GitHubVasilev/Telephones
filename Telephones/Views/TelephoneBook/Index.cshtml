@@ -1,0 +1,28 @@
+﻿@using Telephones.ViewModels
+@model IEnumerable<ShortRecordViewModel>
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    Layout = "_LayoutStart";
+}
+  <h2 class="row col-md-6 offset-md-3">Телефонная книга <small>всего записей @Model.Count()</small></h2>
+  <div class="responsive-table">
+    <div class="table-header row">
+      <div class="col col-1">Id</div>
+      <div class="col col-2">Имя</div>
+      <div class="col col-2">Фамилия</div>
+      <div class="col col-2">Отвество</div>
+    </div>
+
+    @foreach (ShortRecordViewModel record in Model)
+    {
+        <div class="table-row row">
+          <div class="col col-1">
+              <a asp-controller="TelephoneBook" asp-action="Details" asp-route-id="@record.Id">@record.Id</a>
+          </div>
+          <div class="col col-2">@record.FirstName</div>
+          <div class="col col-2">@record.LastName</div>
+          <div class="col col-2">@record.FatherName</div>
+        </div>
+    }
+  </div>
