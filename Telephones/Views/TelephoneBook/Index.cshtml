@@ -7,6 +7,9 @@
 }
   <h2 class="row col-md-6 offset-md-3">Телефонная книга <small>всего записей @Model.Count()</small></h2>
   <div class="responsive-table">
+    <div>
+        <a asp-controller="TelephoneBook" asp-action="Create">Добавить новую запись</a>
+    </div>
     <div class="table-header row">
       <div class="col col-1">Id</div>
       <div class="col col-2">Имя</div>
@@ -23,6 +26,12 @@
           <div class="col col-2">@record.FirstName</div>
           <div class="col col-2">@record.LastName</div>
           <div class="col col-2">@record.FatherName</div>
+          <div class="col col-4">
+              <form method="post" asp-controller="TelephoneBook" asp-action="Delete" asp-route-id="@record.Id">
+                  <input type="submit" value="Удалить"/>
+              </form>
+              <a asp-controller="TelephoneBook" asp-action="Update" asp-route-id="@record.Id">Редактировать</a>
+          </div>
         </div>
     }
   </div>
