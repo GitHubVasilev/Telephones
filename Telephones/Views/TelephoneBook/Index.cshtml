@@ -8,7 +8,7 @@
   <h2 class="row col-md-6 offset-md-3">Телефонная книга <small>всего записей @Model.Count()</small></h2>
   <div class="responsive-table">
     <div>
-        <a asp-controller="TelephoneBook" asp-action="Create">Добавить новую запись</a>
+        <a class="btn btn-outline-primary m-3" asp-controller="TelephoneBook" asp-action="Create">Добавить новую запись</a>
     </div>
     <div class="table-header row">
       <div class="col col-1">Id</div>
@@ -19,18 +19,18 @@
 
     @foreach (ShortRecordViewModel record in Model)
     {
-        <div class="table-row row">
+        <div class="table-row row align-items-center">
           <div class="col col-1">
               <a asp-controller="TelephoneBook" asp-action="Details" asp-route-id="@record.Id">@record.Id</a>
           </div>
           <div class="col col-2">@record.FirstName</div>
           <div class="col col-2">@record.LastName</div>
           <div class="col col-2">@record.FatherName</div>
-          <div class="col col-4">
-              <form method="post" asp-controller="TelephoneBook" asp-action="Delete" asp-route-id="@record.Id">
-                  <input type="submit" value="Удалить"/>
+          <div class="row col col-4">
+              <form class=" col col-3" method="post" asp-controller="TelephoneBook" asp-action="Delete" asp-route-id="@record.Id">
+                  <input class="col btn btn-outline-danger" type="submit" value="Удалить"/>
               </form>
-              <a asp-controller="TelephoneBook" asp-action="Update" asp-route-id="@record.Id">Редактировать</a>
+              <a class="row btn btn-outline-dark col-4" asp-controller="TelephoneBook" asp-action="Update" asp-route-id="@record.Id">Редактировать</a>
           </div>
         </div>
     }

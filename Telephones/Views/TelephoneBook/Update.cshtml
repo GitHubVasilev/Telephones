@@ -7,7 +7,7 @@
 }
 
 <div>
-    <a asp-action="Index">Вернуться к списку</a>
+    <a class="btn btn-outline-primary m-3" asp-action="Index">Вернуться к списку</a>
 </div>
 <form method="post" asp-action="Update" asp-route-id="@Model.Id">
     <div>
@@ -40,5 +40,5 @@
               <input type="text" asp-for="Discript" class="col col-4"/>
         </div>
     </div>
-    <input type="submit" value="Сохранить"/>
+    <input class="btn btn-warning m-3" type="submit" value="Сохранить"/>
 </form>
