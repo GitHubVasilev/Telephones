@@ -31,6 +31,18 @@ app.MapControllerRoute(
 
 app.MapControllerRoute(
     name: "TelephoneBook",
+    pattern: "{controller=TelephoneBook}/{action=Create}/{id?}");
+
+app.MapControllerRoute(
+    name: "TelephoneBook",
     pattern: "{controller=TelephoneBook}/{action=Details}/{id?}");
+
+app.MapControllerRoute(
+    name: "TelephoneBook",
+    pattern: "{controller=TelephoneBook}/{action=Update}/{id?}");
+
+app.MapControllerRoute(
+    name: "TelephoneBook",
+    pattern: "{controller=TelephoneBook}/{action=Delete}/{id?}");
 
 app.Run();

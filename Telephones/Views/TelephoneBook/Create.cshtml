@@ -1,0 +1,43 @@
+﻿@using Telephones.ViewModels
+@model CreateRecordViewModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    Layout = "_LayoutStart";
+}
+
+<div>
+    <a class="btn btn-outline-primary m-3" asp-action="Index">Вернуться к списку</a>
+</div>
+<form method="post" asp-action="Create" asp-controller="TelephoneBook">
+    <div>
+        <div class="table-header row">
+             <h4>Новая запись</h4>
+        </div>
+        <div class="table-row row">
+              <label asp-for="FirstName" class="col col-3">Имя: </label>
+              <input type="text" asp-for="FirstName" class="col col-4" value=""/>
+        </div>
+        <div class="table-row row">
+              <label asp-for="LastName" class="col col-3">Фамилия: </label>
+              <input type="text" asp-for="LastName" class="col col-4" value=""/>
+        </div>
+        <div class="table-row row">
+              <label asp-for="FatherName" class="col col-3">Отвество: </label>
+              <input type="text" asp-for="FatherName" class="col col-4" value=""/>
+        </div>
+        <div class="table-row row">
+              <label asp-for="PhoneNumber" class="col col-3">Телефон: </label>
+              <input type="text" asp-for="PhoneNumber" class="col col-4" value=""/>
+        </div>
+        <div class="table-row row">
+              <label asp-for="Address" class="col col-3">Адрес: </label>
+              <input type="text" asp-for="Address" class="col col-4" value=""/>
+        </div>
+        <div class="table-row row">
+              <label asp-for="Discript" class="col col-3">Описание: </label>
+              <input type="text" asp-for="Discript" class="col col-4" value=""/>
+        </div>
+    </div>
+    <input class="btn btn-warning m-3" type="submit" value="Сохранить"/>
+</form>

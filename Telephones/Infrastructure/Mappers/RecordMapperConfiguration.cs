@@ -13,6 +13,9 @@ namespace Telephones.Infrastructure.Mappers
         {
             CreateMap<Record, RecordViewModel>();
             CreateMap<Record, ShortRecordViewModel>();
+            CreateMap<CreateRecordViewModel, Record>();
+            CreateMap<Record, UpdateRecordViewModel>();
+            CreateMap<UpdateRecordViewModel, Record>();
         }
     }
 }
