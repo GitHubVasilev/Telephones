@@ -11,6 +11,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
 builder.Services.AddControllersWithViews();
+builder.Services.AddServerSideBlazor();
+builder.Services.AddRazorPages();
 
 var app = builder.Build();
 
@@ -24,6 +26,8 @@ using (var scope = app.Services.CreateScope())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
+app.MapBlazorHub();
+app.MapRazorPages();
 
 app.MapControllerRoute(
     name: "default",

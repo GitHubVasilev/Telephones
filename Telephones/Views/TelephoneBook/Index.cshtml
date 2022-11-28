@@ -1,10 +1,13 @@
 ﻿@using Telephones.ViewModels
+@using TelephonesRazorLibrary
 @model IEnumerable<ShortRecordViewModel>
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 @{
     Layout = "_LayoutStart";
 }
+
+
   <h2 class="row col-md-6 offset-md-3">Телефонная книга <small>всего записей @Model.Count()</small></h2>
   <div class="responsive-table">
     <div>
@@ -27,11 +30,15 @@
           <div class="col col-2">@record.LastName</div>
           <div class="col col-2">@record.FatherName</div>
           <div class="row col col-4">
-              <form class=" col col-3" method="post" asp-controller="TelephoneBook" asp-action="Delete" asp-route-id="@record.Id">
-                  <input class="col btn btn-outline-danger" type="submit" value="Удалить"/>
-              </form>
+              <div class="col col-3">
+                <component type="typeof(RecordDeleteComponent)" render-mode="ServerPrerendered" param-id="@record.Id" param-queryurl="@($"{Url.ActionLink()}TelephoneBook/Delete?id={record.Id}")"></component>
+              </div>
               <a class="row btn btn-outline-dark col-4" asp-controller="TelephoneBook" asp-action="Update" asp-route-id="@record.Id">Редактировать</a>
           </div>
         </div>
     }
   </div>
+
+@section Scripts{
+    <script src="_framework/blazor.server.js"></script>
+}

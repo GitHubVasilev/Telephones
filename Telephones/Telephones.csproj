@@ -25,4 +25,8 @@
     <Folder Include="wwwroot\lib\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\TelephonesRazorLibrary\TelephonesRazorLibrary.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -30,6 +30,7 @@ namespace Telephones.Controllers
         public async Task<IActionResult> Index()
         {
             IEnumerable<ShortRecordViewModel> result = _mapper.Map<IEnumerable<ShortRecordViewModel>>(await _context.Records.ToListAsync());
+            var r = Url.ActionLink();
             return View(result);
         }
 
@@ -75,16 +76,16 @@ namespace Telephones.Controllers
             return View(_mapper.Map<Record, UpdateRecordViewModel>(model));
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Update(UpdateRecordViewModel viewModel)
+        [HttpPut]
+        public async Task<IActionResult> Update([FromBody]UpdateRecordViewModel viewModel)
         {
             Record model = _mapper.Map<UpdateRecordViewModel, Record>(viewModel);
 
-            if (_context.Records.Any<Record>(m => m.Id == model.Id) && ModelState.IsValid)
+            if (_context.Records.Any(m => m.Id == model.Id) && ModelState.IsValid)
             {
                 _context.Records.Update(model);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Index", "TelephoneBook");
+                return Ok();
             }
             return new NotFoundResult();
         }
@@ -104,7 +105,7 @@ namespace Telephones.Controllers
             return RedirectToAction("Index", "TelephoneBook");
         }
 
-        [HttpPost]
+        [HttpDelete]
         public async Task<IActionResult> Delete(int? id) 
         {
             if (id is not null && _context is not null) 
@@ -115,7 +116,7 @@ namespace Telephones.Controllers
                 {
                     _context.Records.Remove(model);
                     await _context.SaveChangesAsync();
-                    return RedirectToAction("Index", "TelephoneBook");
+                    return Ok();
                 }
             }
 
