@@ -1,0 +1,30 @@
+﻿@using Microsoft.JSInterop
+
+<input class="btn btn-outline-danger" type="button" value="Удалить" @onclick="(_ => DeleteID(Id))"/>
+
+@code {
+    [Inject] IJSRuntime JsRuntime { get; set; }
+
+    [Parameter]public int Id { get; set; }
+    [Parameter]public string QueryUrl { get; set; }
+
+    protected async Task DeleteID(int id)
+    {
+        RazorInterop interop = new RazorInterop(JsRuntime);
+
+        var request = new HttpClient();
+
+        var client = await request.DeleteAsync(QueryUrl);
+
+        if (client.IsSuccessStatusCode)
+        {
+            await interop.AlertMessage($"Успешно удалена запись: {Id}");
+            await interop.ReloadPage();
+            
+        }
+        else
+        {
+            await interop.AlertMessage($"Ошибка удаления записи: {Id}");
+        }
+    }
+}

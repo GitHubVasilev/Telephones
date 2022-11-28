@@ -1,0 +1,84 @@
+﻿@using Microsoft.JSInterop
+@using System.Text.Json
+
+<div>
+    <div class="table-header row">
+            <h4>Редактирование записи</h4>
+    </div>
+    <input type="hidden" @bind-value="@Id" readonly/>
+    <div class="table-row row">
+            <label class="col col-3">Имя: </label>
+            <input type="text" @bind-value="@FirstName" class="col col-4"/>
+    </div>
+    <div class="table-row row">
+            <label class="col col-3">Фамилия: </label>
+            <input type="text" @bind-value="@LastName" class="col col-4"/>
+    </div>
+    <div class="table-row row">
+            <label class="col col-3">Отвество: </label>
+            <input type="text" @bind-value="@FatherName" class="col col-4"/>
+    </div>
+    <div class="table-row row">
+            <label  class="col col-3">Телефон: </label>
+            <input type="text" @bind-value="@PhoneNumber" class="col col-4"/>
+    </div>
+    <div class="table-row row">
+            <label class="col col-3">Адрес: </label>
+            <input type="text" @bind-value="@Address" class="col col-4"/>
+    </div>
+    <div class="table-row row">
+            <label class="col col-3">Описание: </label>
+            <input type="text" @bind-value="@Discript" class="col col-4"/>
+    </div>
+</div>
+<input class="btn btn-warning m-3" type="button" value="Сохранить" @onclick="(_ => UpdateRecord())"/>
+
+@code {
+    [Inject] IJSRuntime JsRuntime { get; set; }
+
+    [Parameter]public string QueryUrl { get; set; }
+
+    [Parameter] public int Id { get; set; }
+    [Parameter] public string FirstName { get; set; }
+    [Parameter] public string LastName { get; set; }
+    [Parameter] public string FatherName { get; set; }
+    [Parameter] public string PhoneNumber { get; set; }
+    [Parameter] public string Address { get; set; }
+    [Parameter] public string Discript { get; set; }
+
+    protected async Task UpdateRecord()
+    {   
+        RazorInterop interop = new RazorInterop(JsRuntime);
+
+        HttpClient request = new HttpClient();
+
+        Dictionary<string, string> data = new()
+        {
+            { "Id", Id.ToString() },
+            { "FirstName", FirstName },
+            { "LastName", LastName },
+            { "FatherName", FatherName },
+            { "PhoneNumber", PhoneNumber },
+            { "Address", Address },
+            { "Discript", Discript },
+        };
+
+        string json = JsonSerializer.Serialize(data, new JsonSerializerOptions { WriteIndented = true });
+
+        StringContent content = new StringContent(
+            json, System.Text.Encoding.UTF8, "application/json"
+        );
+
+        var client = await request.PutAsync(QueryUrl, content);
+
+        if (client.IsSuccessStatusCode)
+        {
+            await interop.AlertMessage($"Запись успешно обновлена: {Id}");
+            await interop.ReloadPage();
+        }
+        else
+        {
+            await interop.AlertMessage($"Ошибка обновления записи: {Id}");
+        }
+    }
+}
