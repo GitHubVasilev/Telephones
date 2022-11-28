@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using Telephones.Data;
 using Telephones.Data.Models;
 using Telephones.ViewModels;
-using System.Linq;
 
 namespace Telephones.Controllers
 {
@@ -35,10 +34,10 @@ namespace Telephones.Controllers
         }
 
         /// <summary>
-        /// Страница для поиска отдельной записи
+        /// Действие для отображения конкретной записи
         /// </summary>
         /// <param name="id">Идентификатор записи</param>
-        /// <returns></returns>
+        /// <returns>Страница конкретной записи. Страница ошибки NotFound, если запись не найдена</returns>
         [HttpGet]
         public async Task<IActionResult> Details(int? id)
         {
@@ -57,6 +56,11 @@ namespace Telephones.Controllers
             return View(_mapper.Map<RecordViewModel>(record));
         }
 
+        /// <summary>
+        /// Действие для отображения страницы обноления данных записи
+        /// </summary>
+        /// <param name="id">Идентификатор записи для поиска</param>
+        /// <returns>Страница обнвления записи. Страница ошибки NotFound, если запись не найдена</returns>
         [HttpGet]
         public async Task<IActionResult> Update(int? id) 
         {
@@ -76,8 +80,8 @@ namespace Telephones.Controllers
             return View(_mapper.Map<Record, UpdateRecordViewModel>(model));
         }
 
-        [HttpPut]
-        public async Task<IActionResult> Update([FromBody]UpdateRecordViewModel viewModel)
+        [HttpPost]
+        public async Task<IActionResult> Update(UpdateRecordViewModel viewModel)
         {
             Record model = _mapper.Map<UpdateRecordViewModel, Record>(viewModel);
 
@@ -90,12 +94,21 @@ namespace Telephones.Controllers
             return new NotFoundResult();
         }
 
+        /// <summary>
+        /// Действие для добавления новой записи
+        /// </summary>
+        /// <returns>Страница добавления записи. Страница ошибки NotFound, если запись не найдена</returns>
         [HttpGet]
         public async Task<IActionResult> Create() 
         {
             return View(new CreateRecordViewModel());
         }
 
+        /// <summary>
+        /// Добавляет новую запись
+        /// </summary>
+        /// <param name="vmodel">Данные для добавления</param>
+        /// <returns>Возвращает на стартовую старицу сайта</returns>
         [HttpPost]
         public async Task<IActionResult> Create(CreateRecordViewModel vmodel)
         {
@@ -105,7 +118,7 @@ namespace Telephones.Controllers
             return RedirectToAction("Index", "TelephoneBook");
         }
 
-        [HttpDelete]
+        [HttpPost]
         public async Task<IActionResult> Delete(int? id) 
         {
             if (id is not null && _context is not null) 
