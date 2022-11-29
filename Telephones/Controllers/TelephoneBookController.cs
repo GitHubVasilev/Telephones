@@ -57,6 +57,11 @@ namespace Telephones.Controllers
             return View(_mapper.Map<RecordViewModel>(record));
         }
 
+        /// <summary>
+        /// Действие страницы для обновления записи
+        /// </summary>
+        /// <param name="id">Идентификатор записи для обновления</param>
+        /// <returns>Страница обновления записи. Ошибка NotFound в случае неудачи</returns>
         [HttpGet]
         public async Task<IActionResult> Update(int? id) 
         {
@@ -76,6 +81,11 @@ namespace Telephones.Controllers
             return View(_mapper.Map<Record, UpdateRecordViewModel>(model));
         }
 
+        /// <summary>
+        /// Действие для обновления данных записи
+        /// </summary>
+        /// <param name="viewModel">Данные для обновления</param>
+        /// <returns>Результат выполения запроса</returns>
         [HttpPut]
         public async Task<IActionResult> Update([FromBody]UpdateRecordViewModel viewModel)
         {
@@ -90,12 +100,21 @@ namespace Telephones.Controllers
             return new NotFoundResult();
         }
 
+        /// <summary>
+        /// Действия для станицы добавления записи
+        /// </summary>
+        /// <returns>Старица для доавбеления записи</returns>
         [HttpGet]
         public async Task<IActionResult> Create() 
         {
             return View(new CreateRecordViewModel());
         }
 
+        /// <summary>
+        /// Действие для добавления новой записи
+        /// </summary>
+        /// <param name="vmodel">Запись для добавления</param>
+        /// <returns>Редирект на стартовую страницу сайта</returns>
         [HttpPost]
         public async Task<IActionResult> Create(CreateRecordViewModel vmodel)
         {
@@ -105,6 +124,11 @@ namespace Telephones.Controllers
             return RedirectToAction("Index", "TelephoneBook");
         }
 
+        /// <summary>
+        /// Дейтсвие для удаления записи
+        /// </summary>
+        /// <param name="id">Идентификатор записи</param>
+        /// <returns>Результат выполнения действия</returns>
         [HttpDelete]
         public async Task<IActionResult> Delete(int? id) 
         {
