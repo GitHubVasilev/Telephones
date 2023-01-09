@@ -1,6 +1,6 @@
 ﻿namespace Telephones.ViewModels
 {
-    public class ShortRecordViewModel
+    public record ShortRecordViewModel
     {
         public int Id { get; set; }
         public string FirstName { get; set; } = null!;

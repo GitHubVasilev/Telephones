@@ -1,0 +1,48 @@
+﻿<UserControl x:Class="Telephones.Wpf.Views.UserControls.UpdateRecordUserControl"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:userControl="clr-namespace:Telephones.Wpf.Views.UserControls"
+        mc:Ignorable="d"
+        xmlns:prism="http://prismlibrary.com/"
+        prism:ViewModelLocator.AutoWireViewModel="True"
+        Height="500"
+        Width="400">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="10*"/>
+            <RowDefinition Height="80*"/>
+            <RowDefinition Height="10*"/>
+        </Grid.RowDefinitions>
+        <StackPanel Margin="10"
+                    Grid.Row="0">
+            <WrapPanel HorizontalAlignment="Center">
+                <TextBlock Text="Редактирование записи: "/>
+                <TextBlock Text="{Binding RecordData.Id}"/>
+            </WrapPanel>
+        </StackPanel>
+        <userControl:ChangeRecordUserControl Grid.Row="1"
+                                           VerticalAlignment="Top"
+                                           HorizontalAlignment="Left"
+                                           DataContext="{Binding RecordData}">
+        </userControl:ChangeRecordUserControl>
+        <StackPanel Grid.Row="2"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right">
+            <Button Command="{Binding CloseDialogCommand}"
+                    CommandParameter="true"
+                    Content="OK"
+                    Width="75"
+                    HorizontalAlignment="Right"
+                    Margin="10"
+                    IsDefault="True" />
+            <Button Command="{Binding CloseDialogCommand}"
+                    CommandParameter="false"
+                    Content="Close"
+                    Width="75"
+                    HorizontalAlignment="Right"
+                    Margin="10"/>
+        </StackPanel>
+    </Grid>
+</UserControl>
