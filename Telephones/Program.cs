@@ -1,14 +1,10 @@
 using Microsoft.EntityFrameworkCore;
-using Telephones.Data;
 using Telephones.API.Client.Interfaces;
 using Telephones.API.Client.ClientAPI;
 
 var builder = WebApplication.CreateBuilder(args);
 
 string connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlite(connectionString));
 
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
