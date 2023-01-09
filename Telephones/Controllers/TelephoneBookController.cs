@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Telephones.Data;
 using Telephones.ViewModels;
 using Telephones.API.Client.Interfaces;
 using Telephones.API.Client.DTO;
@@ -12,14 +11,12 @@ namespace Telephones.Controllers
     /// </summary>
     public class TelephoneBookController : Controller
     {
-        private readonly AppDbContext _context;
         private readonly IMapper _mapper;
         private readonly ITelephoneBookClientAPI _clientAPI;
 
-        public TelephoneBookController(AppDbContext context, IMapper mapper, ITelephoneBookClientAPI clientAPI)
+        public TelephoneBookController(IMapper mapper, ITelephoneBookClientAPI clientAPI)
         {
             _clientAPI = clientAPI;
-            _context = context;
             _mapper = mapper;
         }
 
