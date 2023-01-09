@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Telephones.Data;
+using Telephones.API.Client.Interfaces;
+using Telephones.API.Client.ClientAPI;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,15 +15,13 @@ builder.Services.AddAutoMapper(typeof(Program).Assembly);
 builder.Services.AddControllersWithViews();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddRazorPages();
+builder.Services.AddHttpClient();
+
+builder.Services.AddSingleton<ITelephoneBookClientAPI, TelephoneBookClientAPI>();
 
 var app = builder.Build();
 
 app.UseMigrationsEndPoint();
-
-using (var scope = app.Services.CreateScope())
-{
-    await DataInitializer.InitializerAsync(scope.ServiceProvider);
-}
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();

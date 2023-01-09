@@ -26,6 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Telephones.API.Client\Telephones.API.Client.csproj" />
     <ProjectReference Include="..\TelephonesRazorLibrary\TelephonesRazorLibrary.csproj" />
   </ItemGroup>
 

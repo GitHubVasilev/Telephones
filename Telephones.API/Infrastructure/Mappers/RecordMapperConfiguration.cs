@@ -11,11 +11,11 @@ namespace Telephones.API.Infrastructure.Mappers
     {
         public RecordMapperConfiguration()
         {
-            CreateMap<Record, RecordViewModel>();
-            CreateMap<Record, ShortRecordViewModel>();
-            CreateMap<CreateRecordViewModel, Record>();
-            CreateMap<Record, UpdateRecordViewModel>();
-            CreateMap<UpdateRecordViewModel, Record>();
+            CreateMap<Record, RecordDTO>();
+            CreateMap<Record, ShortRecordDTO>();
+            CreateMap<CreateRecordDTO, Record>();
+            CreateMap<Record, UpdateRecordDTO>();
+            CreateMap<UpdateRecordDTO, Record>();
         }
     }
 }

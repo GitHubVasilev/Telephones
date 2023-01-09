@@ -1,6 +1,6 @@
-﻿namespace Telephones.API.ViewModels
+﻿namespace Telephones.API.Client.DTO
 {
-    public class CreateRecordViewModel
+    public record CreateRecordDTO
     {
         public string FirstName { get; set; } = null!;
         public string LastName { get; set; } = null!;

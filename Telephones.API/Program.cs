@@ -11,15 +11,21 @@ namespace Telephones.API
 
             string connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
+            builder.Host.ConfigureLogging(logging =>
+            {
+                logging.ClearProviders();
+                logging.AddConsole();
+            });
+
             builder.Services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlite(connectionString));
 
             builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
-            // Add services to the container.
+            builder.Services.AddAuthentication();
+            builder.Services.AddAuthorization();
 
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
@@ -41,8 +47,8 @@ namespace Telephones.API
 
             app.UseHttpsRedirection();
 
+            app.UseAuthentication();
             app.UseAuthorization();
-
 
             app.MapControllers();
 

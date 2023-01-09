@@ -1,6 +1,6 @@
 ﻿namespace Telephones.ViewModels
 {
-    public class UpdateRecordViewModel
+    public record UpdateRecordViewModel
     {
         public int Id { get; set; }
         public string FirstName { get; set; } = null!;

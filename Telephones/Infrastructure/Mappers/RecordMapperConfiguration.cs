@@ -1,4 +1,4 @@
-﻿using Telephones.Data.Models;
+﻿using Telephones.API.Client.DTO;
 using Telephones.Infrastructure.Mappers.Base;
 using Telephones.ViewModels;
 
@@ -11,11 +11,11 @@ namespace Telephones.Infrastructure.Mappers
     {
         public RecordMapperConfiguration()
         {
-            CreateMap<Record, RecordViewModel>();
-            CreateMap<Record, ShortRecordViewModel>();
-            CreateMap<CreateRecordViewModel, Record>();
-            CreateMap<Record, UpdateRecordViewModel>();
-            CreateMap<UpdateRecordViewModel, Record>();
+            CreateMap<RecordDTO, RecordViewModel>();
+            CreateMap<ShortRecordDTO, ShortRecordViewModel>();
+            CreateMap<CreateRecordViewModel, CreateRecordDTO>();
+            CreateMap<RecordDTO, UpdateRecordViewModel>();
+            CreateMap<UpdateRecordViewModel, UpdateRecordDTO>();
         }
     }
 }

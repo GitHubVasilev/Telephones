@@ -1,0 +1,46 @@
+﻿<UserControl x:Class="Telephones.Wpf.Views.UserControls.CreateRecordUserControl"
+       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:userControl="clr-namespace:Telephones.Wpf.Views.UserControls"
+        mc:Ignorable="d"
+        xmlns:prism="http://prismlibrary.com/"
+        prism:ViewModelLocator.AutoWireViewModel="True"
+        Height="400"
+        Width="350">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="10*"/>
+            <RowDefinition Height="84*"/>
+            <RowDefinition Height="10*"/>
+        </Grid.RowDefinitions>
+        <StackPanel Margin="10"
+                    Grid.Row="0">
+            <WrapPanel HorizontalAlignment="Center">
+                <TextBlock Text="Создание записи"/>
+            </WrapPanel>
+        </StackPanel>
+        <userControl:ChangeRecordUserControl Grid.Row="1"
+                                           VerticalAlignment="Top"
+                                           DataContext="{Binding RecordData}">
+        </userControl:ChangeRecordUserControl>
+        <StackPanel Grid.Row="2"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right">
+            <Button Command="{Binding CloseDialogCommand}"
+                    CommandParameter="true"
+                    Content="OK"
+                    Width="75"
+                    HorizontalAlignment="Right"
+                    Margin="10"
+                    IsDefault="True" />
+            <Button Command="{Binding CloseDialogCommand}"
+                    CommandParameter="false"
+                    Content="Close"
+                    Width="75"
+                    HorizontalAlignment="Right"
+                    Margin="10"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

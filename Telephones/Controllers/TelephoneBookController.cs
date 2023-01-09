@@ -1,10 +1,9 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Telephones.Data;
-using Telephones.Data.Models;
 using Telephones.ViewModels;
-using System.Linq;
+using Telephones.API.Client.Interfaces;
+using Telephones.API.Client.DTO;
 
 namespace Telephones.Controllers
 {
@@ -15,9 +14,11 @@ namespace Telephones.Controllers
     {
         private readonly AppDbContext _context;
         private readonly IMapper _mapper;
+        private readonly ITelephoneBookClientAPI _clientAPI;
 
-        public TelephoneBookController(AppDbContext context, IMapper mapper)
+        public TelephoneBookController(AppDbContext context, IMapper mapper, ITelephoneBookClientAPI clientAPI)
         {
+            _clientAPI = clientAPI;
             _context = context;
             _mapper = mapper;
         }
@@ -29,9 +30,14 @@ namespace Telephones.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            IEnumerable<ShortRecordViewModel> result = _mapper.Map<IEnumerable<ShortRecordViewModel>>(await _context.Records.ToListAsync());
-            var r = Url.ActionLink();
-            return View(result);
+            WrapperResultDTO<IEnumerable<ShortRecordDTO>> resultQuery = await _clientAPI.GetRecordsAsync();
+            if (resultQuery.IsSuccess) 
+            {
+                IEnumerable<ShortRecordViewModel> result = _mapper.Map<IEnumerable<ShortRecordViewModel>>(resultQuery.Result);
+                return View(result);
+            }
+            
+            return View();
         }
 
         /// <summary>
@@ -42,19 +48,18 @@ namespace Telephones.Controllers
         [HttpGet]
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Records == null)
+            if (id == null) 
             {
-                return NotFound();
+                return View();
+            }
+            WrapperResultDTO<RecordDTO> resultQuery = await _clientAPI.GetRecordAsync(id);
+
+            if (resultQuery.IsSuccess) 
+            {
+                return View(_mapper.Map<RecordViewModel>(resultQuery.Result));
             }
 
-            var @record = await _context.Records
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (@record == null)
-            {
-                return NotFound();
-            }
-
-            return View(_mapper.Map<RecordViewModel>(record));
+            return View();
         }
 
         /// <summary>
@@ -65,20 +70,18 @@ namespace Telephones.Controllers
         [HttpGet]
         public async Task<IActionResult> Update(int? id) 
         {
-            if (id == null || _context.Records == null) 
+            if (id == null)
             {
-                return NotFound();
+                return View();
+            }
+            WrapperResultDTO<RecordDTO> resultQuery = await _clientAPI.GetRecordAsync(id);
+
+            if (resultQuery.IsSuccess)
+            {
+                return View(_mapper.Map<UpdateRecordViewModel>(resultQuery.Result));
             }
 
-            Record? model = await _context.Records
-                .FirstOrDefaultAsync(m => m.Id == id);
-
-            if (model == null) 
-            {
-                return NotFound();
-            }
-
-            return View(_mapper.Map<Record, UpdateRecordViewModel>(model));
+            return View();
         }
 
         /// <summary>
@@ -89,15 +92,16 @@ namespace Telephones.Controllers
         [HttpPut]
         public async Task<IActionResult> Update([FromBody]UpdateRecordViewModel viewModel)
         {
-            Record model = _mapper.Map<UpdateRecordViewModel, Record>(viewModel);
+            UpdateRecordDTO dto = _mapper.Map<UpdateRecordViewModel, UpdateRecordDTO>(viewModel);
 
-            if (_context.Records.Any(m => m.Id == model.Id) && ModelState.IsValid)
+            WrapperResultDTO<int> resultQuery = await _clientAPI.UpdateRecordAsync(dto);
+
+            if (!resultQuery.IsSuccess)
             {
-                _context.Records.Update(model);
-                await _context.SaveChangesAsync();
-                return Ok();
+                return BadRequest();
             }
-            return new NotFoundResult();
+
+            return Ok(dto);
         }
 
         /// <summary>
@@ -118,9 +122,14 @@ namespace Telephones.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(CreateRecordViewModel vmodel)
         {
-            Record model = _mapper.Map<CreateRecordViewModel, Record>(vmodel);
-            await _context.Records.AddAsync(model);
-            await _context.SaveChangesAsync();
+            CreateRecordDTO dto = _mapper.Map<CreateRecordViewModel, CreateRecordDTO>(vmodel);
+            WrapperResultDTO<int> resultQuery = await _clientAPI.CreateRecordAsync(dto);
+
+            if (!resultQuery.IsSuccess) 
+            {
+                return BadRequest();
+            }
+
             return RedirectToAction("Index", "TelephoneBook");
         }
 
@@ -132,19 +141,14 @@ namespace Telephones.Controllers
         [HttpDelete]
         public async Task<IActionResult> Delete(int? id) 
         {
-            if (id is not null && _context is not null) 
-            {
-                Record? model = _context.Records.FirstOrDefault(m => m.Id == id);
+            WrapperResultDTO<int> resultQuery = await _clientAPI.DeleteRecordAsync(id);
 
-                if (model is not null) 
-                {
-                    _context.Records.Remove(model);
-                    await _context.SaveChangesAsync();
-                    return Ok();
-                }
+            if (!resultQuery.IsSuccess) 
+            {
+                return BadRequest();
             }
 
-            return NotFound();
+            return Ok();
         }
     }
 }

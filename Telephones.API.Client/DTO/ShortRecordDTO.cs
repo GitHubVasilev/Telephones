@@ -1,6 +1,6 @@
-﻿namespace Telephones.API.ViewModels
+﻿namespace Telephones.API.Client.DTO
 {
-    public class ShortRecordViewModel
+    public record ShortRecordDTO
     {
         public int Id { get; set; }
         public string FirstName { get; set; } = null!;

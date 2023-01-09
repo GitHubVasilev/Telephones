@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Telephones.API.Data;
 using Telephones.API.Data.Models;
+using Telephones.API.Infrastructure;
 using Telephones.API.ViewModels;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -15,81 +16,209 @@ namespace Telephones.API.Controllers
     {
         private readonly AppDbContext _context;
         private readonly IMapper _mapper;
+        private readonly ILogger<TelephonesController> _logger;
 
-        public TelephonesController(AppDbContext context, IMapper mapper)
+        public TelephonesController(AppDbContext context, IMapper mapper, ILogger<TelephonesController> logger)
         {
             _context = context;
             _mapper = mapper;
+            _logger = logger;
         }
 
         // GET: api/<TelephonesController>
         [HttpGet("[action]")]
         public async Task<IActionResult> Get()
         {
-            return Ok(_mapper.Map<IEnumerable<ShortRecordViewModel>>(_context.Records));
+            WrapperResult<IEnumerable<ShortRecordDTO>> result = WrapperResult.Build<IEnumerable<ShortRecordDTO>>();
+
+            try
+            {
+                result.Result =  _mapper.Map<IEnumerable<ShortRecordDTO>>(_context.Records);
+                return Ok(result);
+            }
+            catch (Exception e) 
+            {
+                string errorMessage = $"Unknow Error {e.Message}";
+                result.ExceptionObject = e;
+                result.Message = errorMessage;
+                _logger.LogError(errorMessage);
+                return Ok(result);
+            }
         }
 
         // GET api/<TelephonesController>/5
         [HttpGet("[action]/{id:int}")]
         public async Task<IActionResult> Get(int id)
         {
-            if (_context.Records == null)
-            {
-                return NotFound();
-            }
+            WrapperResult<RecordDTO> result = WrapperResult.Build<RecordDTO>();
 
-            var @record = await _context.Records
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (@record == null)
+            try
             {
-                return NotFound();
-            }
+                var @record = await _context.Records
+                    .FirstOrDefaultAsync(m => m.Id == id);
+                if (@record == null)
+                {
+                    string errorMessage = "Record not found";
+                    result.ExceptionObject = new KeyNotFoundException();
+                    result.Message = errorMessage;
+                    _logger.LogError(errorMessage);
+                    return Ok(result);
+                }
 
-            return Ok(_mapper.Map<RecordViewModel>(record));
+                result.Result = _mapper.Map<RecordDTO>(record);
+                return Ok(result);
+            }
+            catch (Exception e) 
+            {
+                string errorMessage = $"Unknow Error {e.Message}";
+                result.ExceptionObject = e;
+                result.Message = errorMessage;
+                _logger.LogError(errorMessage);
+                return Ok(result);
+            }
+            
         }
 
         // POST api/<TelephonesController>
-        [HttpPost]
-        public async Task<IActionResult> Post([FromBody]CreateRecordViewModel vmodel)
+        [HttpPost("[action]")]
+        public async Task<IActionResult> Create([FromBody]CreateRecordDTO vmodel)
         {
-            Record model = _mapper.Map<CreateRecordViewModel, Record>(vmodel);
-            await _context.Records.AddAsync(model);
-            await _context.SaveChangesAsync();
-            return Ok();
+            WrapperResult result = WrapperResult.Build<int>();
+            try
+            {
+                if (vmodel is null)
+                {
+                    string errorMessage = "Record is NULL!!!";
+                    result.ExceptionObject = new NullReferenceException();
+                    result.Message = errorMessage;
+                    _logger.LogError(errorMessage);
+                    return Ok(result);
+                }
+                if (!ModelState.IsValid)
+                {
+                    string errorMessage = "Record is invalid";
+                    result.ExceptionObject = new InvalidDataException();
+                    result.Message = errorMessage;
+                    _logger.LogError(errorMessage);
+                    return Ok(result);
+                }
+                if (_context.Records.Any(m => m.PhoneNumber == vmodel.PhoneNumber))
+                {
+                    string errorMessage = "Record with this phone number already exist";
+                    result.ExceptionObject = new ArgumentException();
+                    result.Message = errorMessage;
+                    _logger.LogError(errorMessage);
+                    return Ok(result);
+                }
+                Record model = _mapper.Map<CreateRecordDTO, Record>(vmodel);
+                await _context.Records.AddAsync(model);
+                await _context.SaveChangesAsync();
+                return Ok(result);
+            }
+            catch (Exception e) 
+            {
+                string errorMessage = $"Unknow Error {e.Message}";
+                result.ExceptionObject = e;
+                result.Message = errorMessage;
+                _logger.LogError(errorMessage);
+                return Ok(result);
+            }
+            
         }
 
         // PUT api/<TelephonesController>/5
-        [HttpPut("[action]/{id:guid}")]
-        public async Task<IActionResult> Put([FromBody] UpdateRecordViewModel viewModel)
+        [HttpPut("[action]/{id:int}")]
+        public async Task<IActionResult> Update([FromBody] UpdateRecordDTO viewModel)
         {
-            Record model = _mapper.Map<UpdateRecordViewModel, Record>(viewModel);
+            WrapperResult result = WrapperResult.Build<int>();
 
-            if (_context.Records.Any(m => m.Id == model.Id) && ModelState.IsValid)
+            try 
             {
-                _context.Records.Update(model);
-                await _context.SaveChangesAsync();
-                return Ok();
+                if (viewModel is null)
+                {
+                    string errorMessage = "Record is NULL!!!";
+                    result.ExceptionObject = new NullReferenceException();
+                    result.Message = errorMessage;
+                    _logger.LogError(errorMessage);
+                    return Ok(result);
+                }
+
+                if (!_context.Records.Any(m => m.Id == viewModel.Id))
+                {
+                    string errorMessage = "Record with this ID number not exist";
+                    result.ExceptionObject = new ArgumentException();
+                    result.Message = errorMessage;
+                    _logger.LogError(errorMessage);
+                    return Ok(result);
+                }
+
+                if (!ModelState.IsValid)
+                {
+                    string errorMessage = "Record is invalid";
+                    result.ExceptionObject = new InvalidDataException();
+                    result.Message = errorMessage;
+                    _logger.LogError(errorMessage);
+                    return Ok(result);
+                }
+
+                Record model = _mapper.Map<UpdateRecordDTO, Record>(viewModel);
+
+                if (_context.Records.Any(m => m.Id == model.Id) && ModelState.IsValid)
+                {
+                    _context.Records.Update(model);
+                    await _context.SaveChangesAsync();
+                    return Ok(result);
+                }
+                return new NotFoundResult();
             }
-            return new NotFoundResult();
+            catch (Exception e)
+            {
+                string errorMessage = $"Unknow Error {e.Message}";
+                result.ExceptionObject = e;
+                result.Message = errorMessage;
+                _logger.LogError(errorMessage);
+                return Ok(result);
+            }
+            
         }
 
         // DELETE api/<TelephonesController>/5
-        [HttpDelete("[action]/{id:guid}")]
-        public async Task<IActionResult> Delete(int id)
+        [HttpDelete("[action]/{id:int}")]
+        public async Task<IActionResult> Delete(int? id)
         {
-            if (_context is not null)
+            WrapperResult result = WrapperResult.Build<int>();
+            try
             {
-                Record? model = _context.Records.FirstOrDefault(m => m.Id == id);
-
-                if (model is not null)
+                if (id == null) 
                 {
-                    _context.Records.Remove(model);
-                    await _context.SaveChangesAsync();
-                    return Ok();
+                    string errorMessage = "ID is null";
+                    result.ExceptionObject = new ArgumentException();
+                    result.Message = errorMessage;
+                    _logger.LogError(errorMessage);
+                    return Ok(result);
                 }
-            }
+                if (!_context.Records.Any(m => m.Id == id))
+                {
+                    string errorMessage = "Record with this ID number not exist";
+                    result.ExceptionObject = new ArgumentException();
+                    result.Message = errorMessage;
+                    _logger.LogError(errorMessage);
+                    return Ok(result);
 
-            return NotFound();
+                }
+                Record model = _context.Records.FirstOrDefault(m => m.Id == id)!;
+                _context.Records.Remove(model);
+                await _context.SaveChangesAsync();
+                return Ok(result);
+            }
+            catch (Exception e) 
+            {
+                string errorMessage = $"Unknow Error {e.Message}";
+                result.ExceptionObject = e;
+                result.Message = errorMessage;
+                _logger.LogError(errorMessage);
+                return Ok(result);
+            }
         }
     }
 }
