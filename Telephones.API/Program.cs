@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Telephones.API.Data;
 
@@ -10,6 +11,8 @@ namespace Telephones.API
             var builder = WebApplication.CreateBuilder(args);
 
             string connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+            builder.Services.AddDbContext<AppDbContext>(options =>
+                options.UseSqlite(connectionString));
 
             builder.Host.ConfigureLogging(logging =>
             {
@@ -17,16 +20,18 @@ namespace Telephones.API
                 logging.AddConsole();
             });
 
-            builder.Services.AddDbContext<AppDbContext>(options =>
-                options.UseSqlite(connectionString));
-
             builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
-            builder.Services.AddAuthentication();
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, config => 
+                {
+                    config.Authority = "https://localhost:7134";
+                    config.Audience = "TelephonesAPI";
+                });
             builder.Services.AddAuthorization();
 
             builder.Services.AddControllers();
-            builder.Services.AddEndpointsApiExplorer();
+            //builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
@@ -38,19 +43,21 @@ namespace Telephones.API
                 await DataInitializer.InitializerAsync(scope.ServiceProvider);
             }
 
-            // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
 
-            app.UseHttpsRedirection();
+            app.UseRouting();
 
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.MapControllers();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
 
             app.Run();
         }

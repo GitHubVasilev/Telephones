@@ -2,16 +2,17 @@
 using Telephones.API.Client.Interfaces;
 using Telephones.API.Client.Properties;
 using Telephones.API.Client.DTO;
+using IdentityModel.Client;
 
 namespace Telephones.API.Client.ClientAPI
 {
     public class TelephoneBookClientAPI : ITelephoneBookClientAPI
     {
-        private HttpClient _httpClient;
+        private IHttpClientFactory _httpFactory;
 
         public TelephoneBookClientAPI(IHttpClientFactory httpClient)
         {
-            _httpClient = httpClient.CreateClient();
+            _httpFactory = httpClient;
         }
 
         public async Task<WrapperResultDTO<int>> CreateRecordAsync(CreateRecordDTO viewModel)
@@ -22,6 +23,7 @@ namespace Telephones.API.Client.ClientAPI
                     System.Text.Encoding.UTF8,
                     "application/json"
                 );
+            HttpClient _httpClient = _httpFactory.CreateClient();
             HttpResponseMessage response = _httpClient.PostAsync(Resources.CreateStringConntection, stringContent).Result;
             response.EnsureSuccessStatusCode();
 
@@ -30,6 +32,7 @@ namespace Telephones.API.Client.ClientAPI
 
         public async Task<WrapperResultDTO<int>> DeleteRecordAsync(int? id)
         {
+            HttpClient _httpClient = _httpFactory.CreateClient();
             HttpResponseMessage response = _httpClient.DeleteAsync($"{Resources.DeleteStringConntection}{id}").Result;
             response.EnsureSuccessStatusCode();
 
@@ -38,6 +41,7 @@ namespace Telephones.API.Client.ClientAPI
 
         public async Task<WrapperResultDTO<RecordDTO>> GetRecordAsync(int? id)
         {
+            HttpClient _httpClient = _httpFactory.CreateClient();
             HttpResponseMessage response = _httpClient.GetAsync($"{Resources.GetStringConntecion}{id}").Result;
             response.EnsureSuccessStatusCode();
 
@@ -46,8 +50,8 @@ namespace Telephones.API.Client.ClientAPI
 
         public async Task<WrapperResultDTO<IEnumerable<ShortRecordDTO>>> GetRecordsAsync()
         {
+            HttpClient _httpClient = _httpFactory.CreateClient();
             HttpResponseMessage response = _httpClient.GetAsync(Resources.GetStringConntecion).Result;
-
             response.EnsureSuccessStatusCode();
 
             return JsonConvert.DeserializeObject<WrapperResultDTO<IEnumerable<ShortRecordDTO>>>(await response.Content.ReadAsStringAsync());
@@ -61,6 +65,7 @@ namespace Telephones.API.Client.ClientAPI
                     System.Text.Encoding.UTF8,
                     "application/json"
                 );
+            HttpClient _httpClient = _httpFactory.CreateClient();
             HttpResponseMessage response = _httpClient.PutAsync($"{Resources.UpdateStringConntection}{viewModel.Id}", stringContent).Result;
             response.EnsureSuccessStatusCode();
 

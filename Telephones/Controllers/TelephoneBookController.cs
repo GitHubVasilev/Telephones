@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Telephones.ViewModels;
 using Telephones.API.Client.Interfaces;
 using Telephones.API.Client.DTO;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Telephones.Controllers
 {
@@ -43,6 +44,7 @@ namespace Telephones.Controllers
         /// <param name="id">Идентификатор записи</param>
         /// <returns></returns>
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null) 

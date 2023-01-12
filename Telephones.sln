@@ -20,6 +20,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Telephones.Wpf", "Telephone
 		{CF9AEB59-C6F2-4171-8DBF-1095479B3510} = {CF9AEB59-C6F2-4171-8DBF-1095479B3510}
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Telephones.IdentityServer", "Telephones.IdentityServer\Telephones.IdentityServer.csproj", "{3A41FD3F-71D7-47CA-BB76-17ADF008FE2E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -46,6 +48,10 @@ Global
 		{C9565B5F-E83A-4C06-8F08-E46C536774B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C9565B5F-E83A-4C06-8F08-E46C536774B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C9565B5F-E83A-4C06-8F08-E46C536774B9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A41FD3F-71D7-47CA-BB76-17ADF008FE2E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A41FD3F-71D7-47CA-BB76-17ADF008FE2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A41FD3F-71D7-47CA-BB76-17ADF008FE2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A41FD3F-71D7-47CA-BB76-17ADF008FE2E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

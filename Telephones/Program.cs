@@ -1,10 +1,29 @@
-using Microsoft.EntityFrameworkCore;
 using Telephones.API.Client.Interfaces;
 using Telephones.API.Client.ClientAPI;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using System.IdentityModel.Tokens.Jwt;
 
 var builder = WebApplication.CreateBuilder(args);
 
-string connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+JwtSecurityTokenHandler.DefaultMapInboundClaims = false;
+
+builder.Services.AddAuthentication(config =>
+        {
+            config.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            config.DefaultChallengeScheme = "oidc";
+        })
+    .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddOpenIdConnect("oidc", conf =>
+    {
+        conf.Authority = "https://localhost:7134/";
+        conf.ClientId = "client_id_web";
+        conf.ClientSecret = "client_secret_web";
+        conf.SaveTokens = true;
+
+        conf.ResponseType = "code";
+    });
+
+builder.Services.AddAuthorization();
 
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
@@ -17,10 +36,12 @@ builder.Services.AddSingleton<ITelephoneBookClientAPI, TelephoneBookClientAPI>()
 
 var app = builder.Build();
 
-app.UseMigrationsEndPoint();
-
 app.UseHttpsRedirection();
+app.UseRouting();
 app.UseStaticFiles();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapBlazorHub();
 app.MapRazorPages();

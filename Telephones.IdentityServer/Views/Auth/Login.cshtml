@@ -1,0 +1,39 @@
+﻿@model Telephones.IdentityServer.ViewModels.LoginViewModel
+
+<h1>
+    Login
+</h1>
+
+<div>
+    <p style="color: #999">        
+        <span>Role: Admin</span><br/>
+        <span>Login: UserAdmin</span><br/>
+        <span>and password: 123456</span>
+    </p>
+    <p>Or</p>
+        <p style="color: #999">
+        <span>Role: User</span><br/>
+        <span>Login: UserUser</span><br/>
+        <span>and password: 123456</span>
+    </p>
+</div>
+<form asp-controller="Auth" asp-action="Login" method="post">
+    <div asp-validation-summary="All"></div>
+
+    <input hidden asp-for="ReturnUrl" />
+    <div>
+        <label>UserName</label>
+        <input asp-for="UserName" />
+        <span asp-validation-for="UserName"></span>
+    </div>
+    <div>
+        <label>Password</label>
+        <input asp-for="Password" />
+        <span asp-validation-for="Password"></span>
+    </div>
+
+    <p>
+        <button type="submit">Log in</button>
+    </p>
+</form>
+

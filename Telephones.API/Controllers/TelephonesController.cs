@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Telephones.API.Data;
@@ -11,8 +12,7 @@ using Telephones.API.ViewModels;
 namespace Telephones.API.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
-    public class TelephonesController : ControllerBase
+    public class TelephonesController : Controller
     {
         private readonly AppDbContext _context;
         private readonly IMapper _mapper;
