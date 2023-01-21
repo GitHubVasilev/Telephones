@@ -16,8 +16,8 @@ namespace Telephones.API.Data
         public static async Task InitializerAsync(IServiceProvider serviceProvider)
         {
 
-            var scope = serviceProvider.CreateScope();
-            await using var context = scope.ServiceProvider.GetService<AppDbContext>();
+            IServiceScope scope = serviceProvider.CreateScope();
+            await using AppDbContext context = scope.ServiceProvider.GetService<AppDbContext>();
 
             if (context is not null || context!.Records.Count() != 0) return;
 

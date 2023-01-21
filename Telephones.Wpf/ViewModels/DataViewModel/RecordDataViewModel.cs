@@ -2,9 +2,15 @@
 
 namespace Telephones.Wpf.ViewModels.DataViewModel
 {
+    /// <summary>
+    /// Медель прдеставления с данными об абоненте в телефонной книге
+    /// </summary>
     public class RecordDataViewModel : BindableBase
     {
         private int _id;
+        /// <summary>
+        /// Идентификатор новой записи
+        /// </summary>
         public int Id
         {
             get => _id;
@@ -12,7 +18,9 @@ namespace Telephones.Wpf.ViewModels.DataViewModel
         }
 
         private string? _firstName;
-
+        /// <summary>
+        /// Имя абонента
+        /// </summary>
         public string? FirstName
         {
             get => _firstName;
@@ -20,6 +28,9 @@ namespace Telephones.Wpf.ViewModels.DataViewModel
         }
 
         private string? _lastName;
+        /// <summary>
+        /// Фамилия абонента
+        /// </summary>
         public string? LastName
         {
             get => _lastName;
@@ -27,6 +38,9 @@ namespace Telephones.Wpf.ViewModels.DataViewModel
         }
 
         private string? _fatherName;
+        /// <summary>
+        /// Отчество абонента
+        /// </summary>
         public string? FatherName
         {
             get => _fatherName;
@@ -34,6 +48,9 @@ namespace Telephones.Wpf.ViewModels.DataViewModel
         }
 
         private string? _phoneNumber;
+        /// <summary>
+        /// Телефон абонента
+        /// </summary>
         public string? PhoneNumber
         {
             get => _phoneNumber;
@@ -41,6 +58,9 @@ namespace Telephones.Wpf.ViewModels.DataViewModel
         }
 
         private string? _address;
+        /// <summary>
+        /// Адрес абонента
+        /// </summary>
         public string? Address
         {
             get => _address;
@@ -48,6 +68,9 @@ namespace Telephones.Wpf.ViewModels.DataViewModel
         }
 
         private string? _discript;
+        /// <summary>
+        /// Описание абонента
+        /// </summary>
         public string? Discript
         {
             get => _discript;

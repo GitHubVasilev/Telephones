@@ -7,6 +7,45 @@ html {
   min-height: 100%;
 }
 
+.footer {
+    background: linear-gradient(0deg, rgba(171,110,80,1) 0%, rgba(228,177,142,1) 50%, rgba(171,110,80,1) 100%);
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px
+}
+
+.label-footer {
+    font-family: "Bodoni MT Poster Compressed";
+    font-size: 36px;
+    padding: 10px;
+    margin:0
+}
+
+.div-auth {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.form-auth {
+    height: 100%;
+    width: 100%;
+    display: flex;
+
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+}
+
+.btn-auth {
+    width: 100px;
+    background-color: inherit;
+    border-top: 0px none red;
+    border-bottom: 0px none red;
+    border-left: 0px none red;
+    border-right: 0px none red;
+    display: inline-block;
+    justify-content: center
+}
+
 body {
     margin-bottom: 60px;
     background-color: #e9f3fb

@@ -6,10 +6,7 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Telephones", "Telephones\Telephones.csproj", "{E6208598-2AE2-45DF-9A24-F537432D799D}"
 	ProjectSection(ProjectDependencies) = postProject
 		{CF9AEB59-C6F2-4171-8DBF-1095479B3510} = {CF9AEB59-C6F2-4171-8DBF-1095479B3510}
-		{F35FB674-2790-48AF-A6D9-F4D88850ED67} = {F35FB674-2790-48AF-A6D9-F4D88850ED67}
 	EndProjectSection
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TelephonesRazorLibrary", "TelephonesRazorLibrary\TelephonesRazorLibrary.csproj", "{F35FB674-2790-48AF-A6D9-F4D88850ED67}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Telephones.API", "Telephones.API\Telephones.API.csproj", "{6468C609-829C-46A7-8841-0C1D20139976}"
 EndProject
@@ -32,10 +29,6 @@ Global
 		{E6208598-2AE2-45DF-9A24-F537432D799D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E6208598-2AE2-45DF-9A24-F537432D799D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E6208598-2AE2-45DF-9A24-F537432D799D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F35FB674-2790-48AF-A6D9-F4D88850ED67}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F35FB674-2790-48AF-A6D9-F4D88850ED67}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F35FB674-2790-48AF-A6D9-F4D88850ED67}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F35FB674-2790-48AF-A6D9-F4D88850ED67}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6468C609-829C-46A7-8841-0C1D20139976}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6468C609-829C-46A7-8841-0C1D20139976}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6468C609-829C-46A7-8841-0C1D20139976}.Release|Any CPU.ActiveCfg = Release|Any CPU

@@ -8,11 +8,12 @@ using System.Collections.ObjectModel;
 using Telephones.API.Client.DTO;
 using Telephones.API.Client.Interfaces;
 using Telephones.Wpf.ViewModels.DataViewModel;
+using Telephones.Wpf.ViewModels.User;
 
 namespace Telephones.Wpf.ViewModels
 {
     /// <summary>
-    /// Shell ViewModel
+    /// Модель представления главного окна
     /// </summary>
     public class ShellViewModel : BindableBase
     {
@@ -23,9 +24,11 @@ namespace Telephones.Wpf.ViewModels
 
         public ShellViewModel(ITelephoneBookClientAPI clientAPI,
                             IMapper mapper,
-                            IDialogService dialogService)
+                            IDialogService dialogService,
+                            UserViewModel user)
         {
-            DisplayName = "Telephone Book";
+            _user = user;
+            DisplayName = "Telephones Book";
             _clientAPI = clientAPI;
             _mapper = mapper;
             _dialogService = dialogService;
@@ -33,8 +36,21 @@ namespace Telephones.Wpf.ViewModels
             Initialize();
         }
 
+        private UserViewModel _user;
+        /// <summary>
+        /// Пользователь
+        /// </summary>
+        public UserViewModel User 
+        {
+            get => _user;
+            set => SetProperty(ref _user, value);
+        }
+
         private ObservableCollection<ShortRecordViewModel> _telephones;
 
+        /// <summary>
+        /// Список записей в телефонной книге
+        /// </summary>
         public ObservableCollection<ShortRecordViewModel> Telephones 
         {
             get => _telephones;
@@ -43,42 +59,63 @@ namespace Telephones.Wpf.ViewModels
 
         private string _displayName;
 
+        /// <summary>
+        /// Заголовок окна
+        /// </summary>
         public string DisplayName
         {
             get => _displayName;
             set => SetProperty(ref _displayName, value);
         }
         
+        /// <summary>
+        /// Команда вызова окна предоставления данных записи в телефонной книге
+        /// </summary>
         public DelegateCommand<int?> ShowBrowserRecordCommand
         { 
             get;
             private set;
         }
 
+        /// <summary>
+        /// Команда вызова кона обновления данных записи в телефонной книге
+        /// </summary>
         public DelegateCommand<int?> ShowUpdateRecordCommand
         {
             get;
             private set;
         }
 
+        /// <summary>
+        /// Команда вызова окна создания новой записи в телефонной книге
+        /// </summary>
         public DelegateCommand ShowCreateRecordCommand
         {
             get;
             private set;
         }
 
+        /// <summary>
+        /// Команда для удаления записи в телефонной книге
+        /// </summary>
         public DelegateCommand<int?> DeleteRecordCommand
         {
             get;
             private set;
         }
 
+        /// <summary>
+        /// Команда обновления данных записей в телефонной книге на окне
+        /// </summary>
         public DelegateCommand ReloadDataCommand 
         {
             get;
             private set;
         }
 
+        /// <summary>
+        /// Обновляет данные записей в телефонной книге на окне
+        /// </summary>
         private void ReloadData() 
         {
             try
@@ -107,6 +144,9 @@ namespace Telephones.Wpf.ViewModels
             }
         }
 
+        /// <summary>
+        /// Инициализирует окно первоначальными данными
+        /// </summary>
         private void Initialize()
         {
             ReloadDataCommand = new DelegateCommand(() =>
@@ -130,7 +170,7 @@ namespace Telephones.Wpf.ViewModels
                             ReloadData();
                         }
                     });
-            }, (id) => true);
+            }).ObservesCanExecute(() => User.CanUpdateRecord);
 
             ShowCreateRecordCommand = new DelegateCommand(() =>
             {
@@ -143,7 +183,7 @@ namespace Telephones.Wpf.ViewModels
                             ReloadData();
                         }
                     });
-            }, () => true);
+            }).ObservesCanExecute(() => User.CanCreateRecord);
 
             DeleteRecordCommand = new DelegateCommand<int?>((id) =>
             {
@@ -153,7 +193,7 @@ namespace Telephones.Wpf.ViewModels
                     {
                         if (r.Result == ButtonResult.OK)
                         {
-                            WrapperResultDTO<int> resultQuery = _clientAPI.DeleteRecordAsync(id).Result;
+                            WrapperResultDTO<int> resultQuery = _clientAPI.DeleteRecordAsync(id, _user.SecretToken.AccessToken).Result;
 
                             if (resultQuery.IsSuccess) 
                             {
@@ -168,7 +208,7 @@ namespace Telephones.Wpf.ViewModels
                             }
                         }
                     });
-            }, (id) => true);
+            }).ObservesCanExecute(() => User.CanDeleteRecord);
 
             ReloadData();
         }

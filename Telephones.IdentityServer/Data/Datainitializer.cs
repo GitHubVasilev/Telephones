@@ -4,8 +4,14 @@ using Telephones.IdentityServer.Entities;
 
 namespace Telephones.IdentityServer.Data
 {
+    /// <summary>
+    /// Класс для первоначального заполения базы данных записями
+    /// </summary>
     public static class DataInitializer
     {
+        /// <summary>
+        /// Заполняет базу данных пользователями, если они там отсутвуют
+        /// </summary>
         public static void Init(IServiceProvider scopeServiceProvider)
         {
             UserManager<ApplicationUser> userManager = scopeServiceProvider.GetService<UserManager<ApplicationUser>>();

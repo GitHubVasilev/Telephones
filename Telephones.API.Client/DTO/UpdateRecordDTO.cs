@@ -1,5 +1,8 @@
 ﻿namespace Telephones.API.Client.DTO
 {
+    /// <summary>
+    /// Объект для передачи данных для обновления записи
+    /// </summary>
     public record UpdateRecordDTO
     {
         public int Id { get; set; }

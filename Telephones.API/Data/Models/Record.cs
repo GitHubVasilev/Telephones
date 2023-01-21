@@ -1,5 +1,8 @@
 ﻿namespace Telephones.API.Data.Models
 {
+    /// <summary>
+    /// Формат данных из базы данных
+    /// </summary>
     public class Record
     {
         public int Id { get; set; }
