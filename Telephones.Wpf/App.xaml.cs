@@ -11,6 +11,9 @@ using Telephones.Wpf.Views.UserControls;
 using Telephones.Wpf.ViewModels;
 using AutoMapper;
 using Telephones.Wpf.Infrastructure.Mapper;
+using Telephones.Wpf.ViewModels.Auth;
+using Telephones.Wpf.ViewModels.User;
+using Prism.Mvvm;
 
 namespace Telephones.Wpf
 {
@@ -34,9 +37,8 @@ namespace Telephones.Wpf
                 services.AddSingleton(mapperConfiguration.CreateMapper());
             });
 
-            
+            containerRegistry.RegisterSingleton<UserViewModel>();
             containerRegistry.Register<ITelephoneBookClientAPI, TelephoneBookClientAPI>();
-
 
             #region Dialogs
             containerRegistry.RegisterDialog<BrowserRecordUserControl, BrowserRecordViewModel>("BrowserRecord");
@@ -44,7 +46,15 @@ namespace Telephones.Wpf
             containerRegistry.RegisterDialog<CreateRecordUserControl, CreateRecordViewModel>("CreateRecord");
             containerRegistry.RegisterDialog<NotificationDialogUserControl, NotificationDialogViewModel>("NotificationDialog");
             containerRegistry.RegisterDialog<YesOrNoDialogUserControl, YesOrNoDialogViewModel>("YesOrNoDialog");
+            containerRegistry.RegisterDialog<LoginDialogUserControl, LoginDialogViewModel>("LoginDialog");
             #endregion
+        }
+
+        protected override void ConfigureViewModelLocator()
+        {
+            base.ConfigureViewModelLocator();
+
+            ViewModelLocationProvider.Register(typeof(LoginPanelUserControl).ToString(), typeof(LoginPanelViewModel));
         }
 
         /// <inheritdoc />

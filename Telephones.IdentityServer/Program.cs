@@ -1,8 +1,8 @@
-using IdentityServer4.Test;
 using Microsoft.EntityFrameworkCore;
 using Telephones.IdentityServer;
 using Telephones.IdentityServer.Data;
 using Telephones.IdentityServer.Entities;
+using Telephones.IdentityServer.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,14 +20,20 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     })
     .AddEntityFrameworkStores<AppDbContext>();
 
-builder.Services.AddIdentityServer(options =>
-        {
-            options.UserInteraction.LoginUrl = "/Auth/Login";
-        })
+builder.Services.ConfigureApplicationCookie(conf =>
+{
+    conf.LoginPath = "/Auth/Login";
+    conf.LogoutPath = "/Auth/Logout";
+});
+
+builder.Services.AddIdentityServer()
     .AddAspNetIdentity<ApplicationUser>()
+    .AddJwtBearerClientAuthentication()
     .AddInMemoryClients(Configurations.GetClients())
     .AddInMemoryApiResources(Configurations.GetApiResorces())
     .AddInMemoryIdentityResources(Configurations.GetIdentityResorces())
+    .AddProfileService<ProfileService>()
+    .AddInMemoryApiScopes(Configurations.GetApiScopes())
     .AddDeveloperSigningCredential();
 
 builder.Services.AddAuthentication();

@@ -1,11 +1,15 @@
-﻿@using Microsoft.JSInterop
+﻿@using Microsoft.AspNetCore.Http
+@using Microsoft.JSInterop
 @using System.Text.Json
+@using IdentityModel.Client
+@using Microsoft.AspNetCore.Authentication.OpenIdConnect
+
 
 <div>
     <div class="table-header row">
             <h4>Редактирование записи</h4>
     </div>
-    <input type="hidden" @bind-value="@Id" readonly/>
+    <input type="hidden" @bind-value="@Id"/>
     <div class="table-row row">
             <label class="col col-3">Имя: </label>
             <input type="text" @bind-value="@FirstName" class="col col-4"/>
@@ -31,7 +35,8 @@
             <input type="text" @bind-value="@Discript" class="col col-4"/>
     </div>
 </div>
-<input class="btn btn-warning m-3" type="button" value="Сохранить" @onclick="(_ => UpdateRecord())"/>
+
+<input class="btn btn-warning m-3" type="submit" value="Сохранить" @onclick="(_ => UpdateRecord())"/>
 
 @code {
     [Inject] IJSRuntime JsRuntime { get; set; }
@@ -45,40 +50,13 @@
     [Parameter] public string PhoneNumber { get; set; }
     [Parameter] public string Address { get; set; }
     [Parameter] public string Discript { get; set; }
+    [Parameter] public string Token { get; set; }
 
     protected async Task UpdateRecord()
     {   
         RazorInterop interop = new RazorInterop(JsRuntime);
 
-        HttpClient request = new HttpClient();
-
-        Dictionary<string, string> data = new()
-        {
-            { "Id", Id.ToString() },
-            { "FirstName", FirstName },
-            { "LastName", LastName },
-            { "FatherName", FatherName },
-            { "PhoneNumber", PhoneNumber },
-            { "Address", Address },
-            { "Discript", Discript },
-        };
-
-        string json = JsonSerializer.Serialize(data, new JsonSerializerOptions { WriteIndented = true });
-
-        StringContent content = new StringContent(
-            json, System.Text.Encoding.UTF8, "application/json"
-        );
-
-        var client = await request.PutAsync(QueryUrl, content);
-
-        if (client.IsSuccessStatusCode)
-        {
             await interop.AlertMessage($"Запись успешно обновлена: {Id}");
             await interop.ReloadPage();
-        }
-        else
-        {
-            await interop.AlertMessage($"Ошибка обновления записи: {Id}");
-        }
     }
 }

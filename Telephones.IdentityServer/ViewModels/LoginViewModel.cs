@@ -2,6 +2,9 @@
 
 namespace Telephones.IdentityServer.ViewModels
 {
+    /// <summary>
+    /// Модель для формы авторизации
+    /// </summary>
     public class LoginViewModel
     {
         [Required]

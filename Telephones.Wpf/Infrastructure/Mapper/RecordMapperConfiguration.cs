@@ -4,6 +4,9 @@ using Telephones.Wpf.ViewModels.DataViewModel;
 
 namespace Telephones.Wpf.Infrastructure.Mapper
 {
+    /// <summary>
+    /// Конфигурация для automapper
+    /// </summary>
     public class RecordMapperConfiguration : Profile
     {
         public RecordMapperConfiguration()

@@ -4,6 +4,7 @@ using Telephones.ViewModels;
 using Telephones.API.Client.Interfaces;
 using Telephones.API.Client.DTO;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication;
 
 namespace Telephones.Controllers
 {
@@ -24,10 +25,9 @@ namespace Telephones.Controllers
         /// <summary>
         /// Начальная страница отображает список записей в телефонной книге
         /// </summary>
-        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> Index()
-        {
+        { 
             WrapperResultDTO<IEnumerable<ShortRecordDTO>> resultQuery = await _clientAPI.GetRecordsAsync();
             if (resultQuery.IsSuccess) 
             {
@@ -44,16 +44,17 @@ namespace Telephones.Controllers
         /// <param name="id">Идентификатор записи</param>
         /// <returns></returns>
         [HttpGet]
-        [Authorize]
         public async Task<IActionResult> Details(int? id)
         {
+            
             if (id == null) 
             {
                 return View();
             }
-            WrapperResultDTO<RecordDTO> resultQuery = await _clientAPI.GetRecordAsync(id);
+            WrapperResultDTO<RecordDTO> resultQuery;
+            resultQuery = await _clientAPI.GetRecordAsync(id, HttpContext.GetTokenAsync("access_token").Result);  
 
-            if (resultQuery.IsSuccess) 
+            if (resultQuery.IsSuccess)
             {
                 return View(_mapper.Map<RecordViewModel>(resultQuery.Result));
             }
@@ -67,16 +68,18 @@ namespace Telephones.Controllers
         /// <param name="id">Идентификатор записи для обновления</param>
         /// <returns>Страница обновления записи. Ошибка NotFound в случае неудачи</returns>
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update(int? id) 
         {
             if (id == null)
             {
                 return View();
             }
-            WrapperResultDTO<RecordDTO> resultQuery = await _clientAPI.GetRecordAsync(id);
+            WrapperResultDTO<RecordDTO> resultQuery = await _clientAPI.GetRecordAsync(id, HttpContext.GetTokenAsync("access_token").Result);
 
             if (resultQuery.IsSuccess)
             {
+                ViewBag.Token = HttpContext.GetTokenAsync("access_token").Result;
                 return View(_mapper.Map<UpdateRecordViewModel>(resultQuery.Result));
             }
 
@@ -88,19 +91,20 @@ namespace Telephones.Controllers
         /// </summary>
         /// <param name="viewModel">Данные для обновления</param>
         /// <returns>Результат выполения запроса</returns>
-        [HttpPut]
-        public async Task<IActionResult> Update([FromBody]UpdateRecordViewModel viewModel)
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Update(UpdateRecordViewModel viewModel)
         {
             UpdateRecordDTO dto = _mapper.Map<UpdateRecordViewModel, UpdateRecordDTO>(viewModel);
-
-            WrapperResultDTO<int> resultQuery = await _clientAPI.UpdateRecordAsync(dto);
+            string token = HttpContext.GetTokenAsync("access_token").Result;
+            WrapperResultDTO<int> resultQuery = await _clientAPI.UpdateRecordAsync(dto, token);
 
             if (!resultQuery.IsSuccess)
             {
-                return BadRequest();
+                return View(dto);
             }
 
-            return Ok(dto);
+            return Redirect("/");
         }
 
         /// <summary>
@@ -108,6 +112,7 @@ namespace Telephones.Controllers
         /// </summary>
         /// <returns>Старица для доавбеления записи</returns>
         [HttpGet]
+        [Authorize(Roles = "Admin,User")]
         public async Task<IActionResult> Create() 
         {
             return View(new CreateRecordViewModel());
@@ -119,10 +124,11 @@ namespace Telephones.Controllers
         /// <param name="vmodel">Запись для добавления</param>
         /// <returns>Редирект на стартовую страницу сайта</returns>
         [HttpPost]
+        [Authorize(Roles = "Admin,User")]
         public async Task<IActionResult> Create(CreateRecordViewModel vmodel)
         {
             CreateRecordDTO dto = _mapper.Map<CreateRecordViewModel, CreateRecordDTO>(vmodel);
-            WrapperResultDTO<int> resultQuery = await _clientAPI.CreateRecordAsync(dto);
+            WrapperResultDTO<int> resultQuery = await _clientAPI.CreateRecordAsync(dto, HttpContext.GetTokenAsync("access_token").Result);
 
             if (!resultQuery.IsSuccess) 
             {
@@ -136,18 +142,14 @@ namespace Telephones.Controllers
         /// Дейтсвие для удаления записи
         /// </summary>
         /// <param name="id">Идентификатор записи</param>
-        /// <returns>Результат выполнения действия</returns>
-        [HttpDelete]
+        /// <returns>Перенаправляет на стартовую страницу сайта</returns>
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id) 
         {
-            WrapperResultDTO<int> resultQuery = await _clientAPI.DeleteRecordAsync(id);
+            WrapperResultDTO<int> resultQuery = await _clientAPI.DeleteRecordAsync(id, HttpContext.GetTokenAsync("access_token").Result);
 
-            if (!resultQuery.IsSuccess) 
-            {
-                return BadRequest();
-            }
-
-            return Ok();
+            return RedirectToAction("Index", "TelephoneBook");
         }
     }
 }

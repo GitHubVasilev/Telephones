@@ -11,6 +11,9 @@ using Telephones.API.ViewModels;
 
 namespace Telephones.API.Controllers
 {
+    /// <summary>
+    /// Контроллет для API данных телефонной книги
+    /// </summary>
     [Route("api/[controller]")]
     public class TelephonesController : Controller
     {
@@ -25,6 +28,9 @@ namespace Telephones.API.Controllers
             _logger = logger;
         }
 
+        /// <summary>
+        /// Предоставляет записи из телефонной в уменьшенном формате. Метод GET
+        /// </summary>
         // GET: api/<TelephonesController>
         [HttpGet("[action]")]
         public async Task<IActionResult> Get()
@@ -46,6 +52,10 @@ namespace Telephones.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Предоставляет полные данные о конкретной записи. Метод GET
+        /// </summary>
+        /// <param name="id">Идентификатор записи</param>
         // GET api/<TelephonesController>/5
         [HttpGet("[action]/{id:int}")]
         public async Task<IActionResult> Get(int id)
@@ -79,8 +89,14 @@ namespace Telephones.API.Controllers
             
         }
 
+        /// <summary>
+        /// Создает новую запись в источнике данных. Метод POST
+        /// </summary>
+        /// <param name="vmodel">Данные для создания записи</param>
+        /// <returns>Результат операции</returns>
         // POST api/<TelephonesController>
         [HttpPost("[action]")]
+        [Authorize(Roles = "Admin,User")]
         public async Task<IActionResult> Create([FromBody]CreateRecordDTO vmodel)
         {
             WrapperResult result = WrapperResult.Build<int>();
@@ -126,8 +142,15 @@ namespace Telephones.API.Controllers
             
         }
 
+        /// <summary>
+        /// Обновляет данные о записи в телефонной книге.
+        /// Метод PUT.
+        /// </summary>
+        /// <param name="viewModel">Обновленные данные записи для обновления</param>
+        /// <returns>Результат операции</returns>
         // PUT api/<TelephonesController>/5
         [HttpPut("[action]/{id:int}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update([FromBody] UpdateRecordDTO viewModel)
         {
             WrapperResult result = WrapperResult.Build<int>();
@@ -169,6 +192,7 @@ namespace Telephones.API.Controllers
                     await _context.SaveChangesAsync();
                     return Ok(result);
                 }
+                
                 return new NotFoundResult();
             }
             catch (Exception e)
@@ -182,8 +206,15 @@ namespace Telephones.API.Controllers
             
         }
 
+        /// <summary>
+        /// Удаляет данные о записи в источнике данных
+        /// Метод DELETE
+        /// </summary>
+        /// <param name="id">Идентификатор записи для удаления</param>
+        /// <returns>Результат операции</returns>
         // DELETE api/<TelephonesController>/5
         [HttpDelete("[action]/{id:int}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             WrapperResult result = WrapperResult.Build<int>();

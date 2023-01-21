@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Telephones.API.Data;
 
 namespace Telephones.API
@@ -25,13 +26,18 @@ namespace Telephones.API
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, config => 
                 {
+                    config.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateAudience = false
+                    };
+
                     config.Authority = "https://localhost:7134";
-                    config.Audience = "TelephonesAPI";
+                    config.Audience = "https://localhost:7134";
                 });
             builder.Services.AddAuthorization();
 
             builder.Services.AddControllers();
-            //builder.Services.AddEndpointsApiExplorer();
+
             builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
