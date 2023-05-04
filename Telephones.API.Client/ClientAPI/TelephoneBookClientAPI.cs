@@ -34,10 +34,15 @@ namespace Telephones.API.Client.ClientAPI
                 );
             HttpClient httpClient = _httpFactory.CreateClient();
             httpClient.SetBearerToken(asseccToken);
-            HttpResponseMessage response = httpClient.PostAsync(Resources.CreateStringConntection, stringContent).Result;
+            HttpResponseMessage response = await httpClient
+                .PostAsync(Resources.CreateStringConntection, stringContent).ConfigureAwait(false);
             response.EnsureSuccessStatusCode();
 
-            return JsonConvert.DeserializeObject<WrapperResultDTO<int>>(await response.Content.ReadAsStringAsync());
+            return JsonConvert
+                .DeserializeObject<WrapperResultDTO<int>>
+                (
+                    await response.Content.ReadAsStringAsync().ConfigureAwait(false)
+                );
         }
 
         /// <summary>
@@ -50,10 +55,15 @@ namespace Telephones.API.Client.ClientAPI
         {
             HttpClient httpClient = _httpFactory.CreateClient();
             httpClient.SetBearerToken(asseccToken);
-            HttpResponseMessage response = httpClient.DeleteAsync($"{Resources.DeleteStringConntection}{id}").Result;
+            HttpResponseMessage response = await httpClient
+                .DeleteAsync($"{Resources.DeleteStringConntection}{id}").ConfigureAwait(false);
             response.EnsureSuccessStatusCode();
 
-            return JsonConvert.DeserializeObject<WrapperResultDTO<int>>(await response.Content.ReadAsStringAsync());
+            return JsonConvert
+                .DeserializeObject<WrapperResultDTO<int>>
+                (
+                    await response.Content.ReadAsStringAsync().ConfigureAwait(false)
+                );
         }
 
         /// <summary>
@@ -66,10 +76,14 @@ namespace Telephones.API.Client.ClientAPI
         {
             HttpClient httpClient = _httpFactory.CreateClient();
             httpClient.SetBearerToken(asseccToken);
-            HttpResponseMessage response = httpClient.GetAsync($"{Resources.GetStringConntecion}{id}").Result;
+            HttpResponseMessage response = await httpClient.GetAsync($"{Resources.GetStringConntecion}{id}").ConfigureAwait(false);
             response.EnsureSuccessStatusCode();
 
-            return JsonConvert.DeserializeObject<WrapperResultDTO<RecordDTO>>(await response.Content.ReadAsStringAsync());
+            return JsonConvert
+                .DeserializeObject<WrapperResultDTO<RecordDTO>>
+                (
+                    await response.Content.ReadAsStringAsync().ConfigureAwait(false)
+                );
         }
 
         /// <summary>
@@ -79,10 +93,14 @@ namespace Telephones.API.Client.ClientAPI
         public async Task<WrapperResultDTO<IEnumerable<ShortRecordDTO>>> GetRecordsAsync()
         {
             HttpClient _httpClient = _httpFactory.CreateClient();
-            HttpResponseMessage response = _httpClient.GetAsync(Resources.GetStringConntecion).Result;
+            HttpResponseMessage response = await _httpClient.GetAsync(Resources.GetStringConntecion).ConfigureAwait(false);
             response.EnsureSuccessStatusCode();
 
-            return JsonConvert.DeserializeObject<WrapperResultDTO<IEnumerable<ShortRecordDTO>>>(await response.Content.ReadAsStringAsync());
+            return JsonConvert
+                .DeserializeObject<WrapperResultDTO<IEnumerable<ShortRecordDTO>>>
+                (
+                    await response.Content.ReadAsStringAsync().ConfigureAwait(false)
+                );
         }
 
         /// <summary>
@@ -101,10 +119,11 @@ namespace Telephones.API.Client.ClientAPI
                 );
             HttpClient httpClient = _httpFactory.CreateClient();
             httpClient.SetBearerToken(asseccToken);
-            HttpResponseMessage response = httpClient.PutAsync($"{Resources.UpdateStringConntection}{viewModel.Id}", stringContent).Result;
+            HttpResponseMessage response = await httpClient
+                .PutAsync($"{Resources.UpdateStringConntection}{viewModel.Id}", stringContent).ConfigureAwait(false);
             response.EnsureSuccessStatusCode();
 
-            return JsonConvert.DeserializeObject<WrapperResultDTO<int>>(await response.Content.ReadAsStringAsync());
+            return JsonConvert.DeserializeObject<WrapperResultDTO<int>>(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
         }
     }
 }
