@@ -52,7 +52,8 @@
                   ItemsSource="{Binding Telephones}"
                   ColumnWidth="*"
                   CanUserAddRows="False"
-                  SelectionMode="Single">
+                  SelectionMode="Single"
+                  VirtualizingPanel.VirtualizationMode="Recycling">
             <DataGrid.Columns>
                 <DataGridTemplateColumn Header="Id"
                                         Width="50">

@@ -37,7 +37,6 @@ namespace Telephones.API.Client.ClientAPI
             HttpResponseMessage response = await httpClient
                 .PostAsync(Resources.CreateStringConntection, stringContent).ConfigureAwait(false);
             response.EnsureSuccessStatusCode();
-
             return JsonConvert
                 .DeserializeObject<WrapperResultDTO<int>>
                 (
@@ -58,7 +57,7 @@ namespace Telephones.API.Client.ClientAPI
             HttpResponseMessage response = await httpClient
                 .DeleteAsync($"{Resources.DeleteStringConntection}{id}").ConfigureAwait(false);
             response.EnsureSuccessStatusCode();
-
+            
             return JsonConvert
                 .DeserializeObject<WrapperResultDTO<int>>
                 (
